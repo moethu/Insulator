@@ -401,7 +401,15 @@ namespace Insulator
 
 
                         XYZ LowerStartPoint = rotated.Evaluate(((layeroffset) / rotated.Length), true);
-                        XYZ UpperStartPoint = rotated.Evaluate((ypos / rotated.Length), true);
+                        XYZ UpperStartPoint = null;
+
+                        if (ypos < 0)
+                        { 
+                            Curve rotatedHelper = c.Curve.CreateTransformed(Transform.CreateRotationAtPoint(XYZ.BasisZ, rotationangle * -1, c.Curve.GetEndPoint(0)));
+                            UpperStartPoint = rotatedHelper.Evaluate((ypos * -1 / rotatedHelper.Length), true);
+                        }      
+                        else
+                            UpperStartPoint = rotated.Evaluate((ypos / rotated.Length), true);
 
                         XYZ v = c.Curve.GetEndPoint(0) - LowerStartPoint;
                         XYZ u = c.Curve.GetEndPoint(0) - UpperStartPoint;
@@ -417,6 +425,9 @@ namespace Insulator
 
             return null;
         }
+
+
+
 
 
         /// <summary>
@@ -546,6 +557,21 @@ namespace Insulator
         {
             this.from += left;
             this.to += left;
+        }
+    }
+
+
+    public static class Extensions
+    {
+        public static Line CreateLineSafe(this Document doc, XYZ p1, XYZ p2)
+        {
+            
+            if (p1.DistanceTo(p2) > doc.Application.ShortCurveTolerance)
+            {
+                return Line.CreateBound(p1, p2);
+            }
+
+            return null;
         }
     }
 }
