@@ -160,35 +160,43 @@ namespace Insulator
                         // Retrieve Boundaries of the Insulation layer
                         Tuple<Curve, Curve> curves = getInsulationLayer(doc, wall);
 
-                        // Collect Openings from the wall
-                        removeOpenings(ref Breaks, wall, doc);
+                        if (curves != null)
+                        {
 
-                        // initial Insulation location
-                        double location = 0;
+                            // Collect Openings from the wall
+                            removeOpenings(ref Breaks, wall, doc);
 
-                        // Start with a left loop
-                        bool left = true;
+                            // initial Insulation location
+                            double location = 0;
 
-                        // Set this wall as banned from intersection checks
-                        List<int> BannedWalls = new List<int>() { wall.Id.IntegerValue };
+                            // Start with a left loop
+                            bool left = true;
 
-                        // Get extensions to left hand joined walls
-                        Curve lowerExtendedLeft = handleJoinsLeft(doc, c, curves.Item2, ref BannedWalls);
+                            // Set this wall as banned from intersection checks
+                            List<int> BannedWalls = new List<int>() { wall.Id.IntegerValue };
 
-                        // Get extensions to other layers
-                        // adjust the interruptions if the insulation layer is extended
-                        double offset = lowerExtendedLeft.Length - curves.Item2.Length;
-                        if (offset > 0) foreach (Interruption ir in Breaks) ir.Extend(offset);
+                            // Get extensions to left hand joined walls
+                            Curve lowerExtendedLeft = handleJoinsLeft(doc, c, curves.Item2, ref BannedWalls);
 
-                        // Get Extensions to right hand joined walls
-                        Tuple<Curve, Curve> extended = handleJoinsRight(doc, c, lowerExtendedLeft, curves.Item1, ref BannedWalls);
+                            // Get extensions to other layers
+                            // adjust the interruptions if the insulation layer is extended
+                            double offset = lowerExtendedLeft.Length - curves.Item2.Length;
+                            if (offset > 0) foreach (Interruption ir in Breaks) ir.Extend(offset);
 
-                        // draw insulation loops anlong the curve
-                        while (location / extended.Item2.Length < 1)
-                            location += drawInsulation(Ids, doc, extended.Item2, location, extended.Item1, ref left, Breaks, insmat.zigzag);
+                            // Get Extensions to right hand joined walls
+                            Tuple<Curve, Curve> extended = handleJoinsRight(doc, c, lowerExtendedLeft, curves.Item1, ref BannedWalls);
 
-                        // Group loops
-                        doc.Create.NewGroup(Ids);
+                            // draw insulation loops anlong the curve
+                            while (location / extended.Item2.Length < 1)
+                                location += drawInsulation(Ids, doc, extended.Item2, location, extended.Item1, ref left, Breaks, insmat.zigzag);
+
+                            // Group loops
+                            doc.Create.NewGroup(Ids);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Could not find any insulation material layer in the selected wall. Please create a layer using a material named \"soft insulation\".");
+                        }
                     }
 
                 }
