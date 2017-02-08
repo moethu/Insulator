@@ -61,7 +61,7 @@ namespace Insulator
 
             // Create a new Button
             PushButton pushButton = ribbonPanel.AddItem(new PushButtonData("Insulator", "Insulator", path, "Insulator.DrawInsulation")) as PushButton;
-            pushButton.SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, "http://grevit.net/?p=2509"));
+            pushButton.SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, "http://grevit.net/"));
 
             // Apply the Icon
             pushButton.LargeImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(

@@ -2,7 +2,7 @@
 <RevitAddIns>
   <AddIn Type="Application">
     <Name>Insulator</Name>
-    <Assembly>C:\ProgramData\Autodesk\Revit\Addins\2015\Insulator.dll</Assembly>
+    <Assembly>Insulator.2017.dll</Assembly>
     <FullClassName>Insulator.CreateButton</FullClassName>
     <ClientId>26d8097a-8a84-4898-b347-22b94bf714c5</ClientId>
     <VendorId>Grevit.net</VendorId>
